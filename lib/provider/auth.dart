@@ -87,7 +87,7 @@ class AuthProvider with ChangeNotifier {
   }
 
   getOrders() async {
-    orders = await _orderServices.getUserOrders(userId: _user.uid);
+    orders = await _orderServices.getUserOrders();
     notifyListeners();
     print(orders);
   }

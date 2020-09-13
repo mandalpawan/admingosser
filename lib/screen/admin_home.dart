@@ -1,5 +1,6 @@
 import 'package:adminpage/screen/admin_add_product.dart';
 import 'package:adminpage/screen/explore.dart';
+import 'package:adminpage/screen/order.dart';
 import 'package:adminpage/screen/product_detail.dart';
 import 'package:adminpage/screen/product_list.dart';
 import 'package:flutter/material.dart';
@@ -152,17 +153,26 @@ class _AdminState extends State<Admin> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: Card(
-                      child: ListTile(
-                          title: FlatButton.icon(
-                              onPressed: null,
-                              icon: Icon(Icons.shopping_cart),
-                              label: Text("Orders")),
-                          subtitle: Text(
-                            '5',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: active, fontSize: 60.0),
-                          )),
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context){
+                            return Order();
+                          }
+                        ));
+                      },
+                      child: Card(
+                        child: ListTile(
+                            title: FlatButton.icon(
+                                onPressed: null,
+                                icon: Icon(Icons.shopping_cart),
+                                label: Text("Orders")),
+                            subtitle: Text(
+                              '5',
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: active, fontSize: 60.0),
+                            )),
+                      ),
                     ),
                   ),
                   Padding(
