@@ -34,7 +34,7 @@ class Food{
       'Name':Name,
       'sale': sale,
       'price': price,
-      'catagory': category,
+      'category': category,
       'discription': discription,
       'image':image,
       'createdAt': createdAt,

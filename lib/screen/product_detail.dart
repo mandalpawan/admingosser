@@ -1,8 +1,10 @@
 import 'package:adminpage/model/product_model.dart';
 import 'package:adminpage/provider/product_notifier.dart';
 import 'package:adminpage/screen/admin_add_product.dart';
+import 'package:adminpage/screen/load_page.dart';
 import 'package:adminpage/services/product_adding.dart';
 import 'package:flutter/material.dart';
+import 'package:loading/loading.dart';
 import 'package:provider/provider.dart';
 
 
@@ -24,9 +26,10 @@ class _ShowAdminFoodDetailState extends State<ShowAdminFoodDetail> {
 
     return Scaffold(
       appBar: AppBar(
+        elevation: 0.0,
+        backgroundColor: Colors.green,
         title: Text(
-          "Hello",
-
+          foodNotifier.currentFood.Name.toUpperCase(),
         ),
       ),
       body: Container(
@@ -51,7 +54,7 @@ class _ShowAdminFoodDetailState extends State<ShowAdminFoodDetail> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Heelo",
+                Text(foodNotifier.currentFood.Name.toUpperCase(),
                   style: TextStyle(
                       fontSize: 22.0,
                       fontWeight: FontWeight.bold
@@ -61,7 +64,7 @@ class _ShowAdminFoodDetailState extends State<ShowAdminFoodDetail> {
                   "Rs "+ foodNotifier.currentFood.price,
                   style: TextStyle(
                       color: Colors.orangeAccent,
-                      fontSize: 18.0,
+                      fontSize: 20.0,
                       fontWeight: FontWeight.bold
                   ),
                 ),

@@ -1,10 +1,20 @@
+import 'package:adminpage/model/order.dart';
+import 'package:adminpage/provider/auth.dart';
+import 'package:adminpage/provider/product_notifier.dart';
 import 'package:adminpage/screen/admin_add_product.dart';
+import 'package:adminpage/screen/cancel_order.dart';
 import 'package:adminpage/screen/explore.dart';
 import 'package:adminpage/screen/order.dart';
+import 'package:adminpage/screen/pending.dart';
 import 'package:adminpage/screen/product_detail.dart';
 import 'package:adminpage/screen/product_list.dart';
+import 'package:adminpage/screen/sold.dart';
+import 'package:adminpage/services/order.dart';
+import 'package:adminpage/services/product_adding.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:loading/loading.dart';
+import 'package:provider/provider.dart';
 
 enum Page { dashboard, manage }
 
@@ -15,19 +25,24 @@ class Admin extends StatefulWidget {
 
 class _AdminState extends State<Admin> {
   Page _selectedPage = Page.dashboard;
-  MaterialColor active = Colors.red;
+  MaterialColor active = Colors.green;
   MaterialColor notActive = Colors.grey;
   TextEditingController categoryController = TextEditingController();
   TextEditingController brandController = TextEditingController();
   GlobalKey<FormState> _categoryFormKey = GlobalKey();
   GlobalKey<FormState> _brandFormKey = GlobalKey();
-  //BrandService _brandService = BrandService();
- // CategoryService _categoryService = CategoryService();
 
+  @override
+  void initState() {
+    FoodNotifier foodNotifier = Provider.of<FoodNotifier>(context, listen: false);
+    getFoods(foodNotifier);
+    super.initState();
+  }
 
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         appBar: AppBar(
           title: Row(
@@ -64,6 +79,10 @@ class _AdminState extends State<Admin> {
   }
 
   Widget _loadScreen() {
+
+    final user = Provider.of<AuthProvider>(context);
+    FoodNotifier foodNotifier = Provider.of<FoodNotifier>(context);
+
     switch (_selectedPage) {
       case Page.dashboard:
         return Column(
@@ -76,7 +95,7 @@ class _AdminState extends State<Admin> {
                   size: 30.0,
                   color: Colors.green,
                 ),
-                label: Text('12,000',
+                label: Text(user.totalSale.toString(),
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 30.0, color: Colors.green)),
               ),
@@ -100,55 +119,82 @@ class _AdminState extends State<Admin> {
                               icon: Icon(Icons.people_outline),
                               label: Text("Users")),
                           subtitle: Text(
-                            '7',
+                            user.allUser.length.toString(),
                             textAlign: TextAlign.center,
-                            style: TextStyle(color: active, fontSize: 60.0),
+                            style: TextStyle(color: active, fontSize: 50.0),
                           )),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(5.0),
-                    child: Card(
-                      child: ListTile(
-                          title: FlatButton.icon(
-                              onPressed: null,
-                              icon: Icon(Icons.category),
-                              label: Text("Categories")),
-                          subtitle: Text(
-                            '23',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: active, fontSize: 60.0),
-                          )),
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context){
+                            return processing();
+                          }
+                        ));
+                      },
+                      child: Card(
+                        child: ListTile(
+                            title: FlatButton.icon(
+                                onPressed: null,
+                                icon: Icon(Icons.category),
+                                label: Text("Process")),
+                            subtitle: Text(
+                              user.totalprocessingItem.toString(),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: active, fontSize: 50.0),
+                            )),
+                      ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: Card(
-                      child: ListTile(
-                          title: FlatButton.icon(
-                              onPressed: null,
-                              icon: Icon(Icons.track_changes),
-                              label: Text("Producs")),
-                          subtitle: Text(
-                            '120',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: active, fontSize: 60.0),
-                          )),
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (BuildContext context){
+                              return AdminFoodDetailScreen();
+                            }
+                        ));
+                      },
+                      child: Card(
+                        child: ListTile(
+                            title: FlatButton.icon(
+                                onPressed: null,
+                                icon: Icon(Icons.track_changes),
+                                label: Text("Producs")),
+                            subtitle: Text(
+                              foodNotifier.foodList.length.toString(),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: active, fontSize: 50.0),
+                            )),
+                      ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(22.0),
-                    child: Card(
-                      child: ListTile(
-                          title: FlatButton.icon(
-                              onPressed: null,
-                              icon: Icon(Icons.tag_faces),
-                              label: Text("Sold")),
-                          subtitle: Text(
-                            '13',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: active, fontSize: 60.0),
-                          )),
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context){
+                            return sold();
+                          }
+                        ));
+                      },
+                      child: Card(
+                        child: ListTile(
+                            title: FlatButton.icon(
+                                onPressed: null,
+                                icon: Icon(Icons.tag_faces),
+                                label: Text("Sold")),
+                            subtitle: Text(
+                              user.totalSoldItem.toString(),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: active, fontSize: 50.0),
+                            )),
+                      ),
                     ),
                   ),
                   Padding(
@@ -168,26 +214,35 @@ class _AdminState extends State<Admin> {
                                 icon: Icon(Icons.shopping_cart),
                                 label: Text("Orders")),
                             subtitle: Text(
-                              '5',
+                              user.totalOrderedItem.toString(),
                               textAlign: TextAlign.center,
-                              style: TextStyle(color: active, fontSize: 60.0),
+                              style: TextStyle(color: active, fontSize: 50.0),
                             )),
                       ),
                     ),
                   ),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: Card(
-                      child: ListTile(
-                          title: FlatButton.icon(
-                              onPressed: null,
-                              icon: Icon(Icons.close),
-                              label: Text("Return")),
-                          subtitle: Text(
-                            '0',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: active, fontSize: 60.0),
-                          )),
+                    child: GestureDetector(
+                      onTap: (){
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context){
+                            return cancelOrder();
+                          }
+                        ));
+                      },
+                      child: Card(
+                        child: ListTile(
+                            title: FlatButton.icon(
+                                onPressed: null,
+                                icon: Icon(Icons.close),
+                                label: Text("Return")),
+                            subtitle: Text(
+                              user.totalCancelItem.toString(),
+                              textAlign: TextAlign.center,
+                              style: TextStyle(color: active, fontSize: 50.0),
+                            )),
+                      ),
                     ),
                   ),
                 ],

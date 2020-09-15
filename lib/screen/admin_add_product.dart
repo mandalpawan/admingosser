@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:adminpage/model/product_model.dart';
 import 'package:adminpage/provider/product_notifier.dart';
+import 'package:adminpage/screen/load_page.dart';
 import 'package:adminpage/services/product_adding.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -28,12 +29,12 @@ class _AddfooditemAdminState extends State<AddfooditemAdmin> {
   String _imageUrl;
   File _imageFile;
 
-  var _FoodListCatagory = ["vegetables", "fruits","dry fruits","cerealas","pulses","spices","dairy products ","bakery products","eggs & chicken","mahila gruhudyog products"];
+  var _FoodListCatagory = ["vegetables", "fruits","dry fruits","cerealas","pulses","spices","dairy products","bakery products","eggs & chicken","mahila gruhudyog products"];
 
-  var _FoodListSale = ["OnSale", "Not Sale"];
+  var _FoodListSale = ["Regular", "Not Regular"];
 
   var _currentFoodCatagoryList = "vegetables";
-  var _currentFoodSaleList = "Not Sale" ;
+  var _currentFoodSaleList = "Not Regular" ;
 
   @override
   void initState(){
@@ -260,25 +261,28 @@ class _AddfooditemAdminState extends State<AddfooditemAdmin> {
     if(!_formkey.currentState.validate()){
       return;
     }
+
     _formkey.currentState.save();
 
     uploadFoodAndImage(_currentFood, widget.isUpdating , _imageFile,_onFoodUploaded);
-    Loading();
 
-
-    print("name: ${_currentFood.Name}");
-    print("CatagoryDrop: ${_currentFood.category}");
-    print("CatagoryDropsale: ${_currentFood.sale}");
-    print("Catagory: ${_currentFood.discription}");
-    print("Catagory: ${_currentFood.price}");
-    print("Catagory: ${_currentFood.image}");
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Food Form"),
+        elevation: 0.0,
+        backgroundColor: Colors.green,
+        title: Text(
+            "Product Form"
+        ),
+        leading: IconButton(
+          icon: Icon(Icons.close),
+          onPressed: (){
+            Navigator.pop(context);
+          },
+        ),
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(32.0),
@@ -290,7 +294,7 @@ class _AddfooditemAdminState extends State<AddfooditemAdmin> {
               _showImage(),
               SizedBox(height: 16.0,),
               Text(
-                widget.isUpdating ? "Updating Food Item" : "ADD Food Item",
+                widget.isUpdating ? "Updating Product" : "Add New Product",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 30.0),
               ),
@@ -298,6 +302,7 @@ class _AddfooditemAdminState extends State<AddfooditemAdmin> {
               _imageFile == null && _imageUrl == null
                   ? ButtonTheme(
                 child: RaisedButton(
+                  color: Colors.green,
                   onPressed: ()=> _getLocalImage(),
                   child: Text(
                     "Add Image",
@@ -315,8 +320,6 @@ class _AddfooditemAdminState extends State<AddfooditemAdmin> {
               _buildDiscriptionField(),
               _buildPriceField(),
               _buildstockField(),
-
-
               SizedBox(height: 16.0,),
             ],
           ),
@@ -324,6 +327,7 @@ class _AddfooditemAdminState extends State<AddfooditemAdmin> {
       ),
 
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.green,
         onPressed: () => _saveFood(),
         child: Icon(Icons.save),
         foregroundColor: Colors.white,

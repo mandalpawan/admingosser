@@ -39,5 +39,10 @@ class OrderServices {
         return orders;
       });
 
+  void  updateOrder({ String uid ,String  status }) async =>
+    _firestore.collection(collection)
+      .document(uid)
+        .updateData({'status': (int.parse(status) + 50).toString() });
+
 
 }

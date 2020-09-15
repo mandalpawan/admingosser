@@ -33,6 +33,6 @@ class ProductModel {
     _price = int.parse(snapshot.data[PRICE]);
     _quantity=snapshot.data[QUANTITY];
     _category=snapshot.data[CATEGORY];
-    _totalprice=snapshot.data[PRICE]*snapshot.data[QUANTITY];
+    _totalprice=(int.parse(snapshot.data[PRICE]))*snapshot.data[QUANTITY];
   }
 }

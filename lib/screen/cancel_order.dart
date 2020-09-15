@@ -4,27 +4,26 @@ import 'package:adminpage/services/order.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
-class Order extends StatefulWidget {
+class cancelOrder extends StatefulWidget {
   @override
-  _OrderState createState() => _OrderState();
+  _cancelOrderState createState() => _cancelOrderState();
 }
 
-class _OrderState extends State<Order> {
+class _cancelOrderState extends State<cancelOrder> {
   @override
   Widget build(BuildContext context) {
 
-    final user = Provider.of<AuthProvider>(context);
 
+    final user = Provider.of<AuthProvider>(context);
 
     OrderServices orderService =  OrderServices();
 
     return Scaffold(
       appBar: AppBar(
-        elevation: 0.0,
         backgroundColor: Colors.green,
+        elevation: 0.0,
         title: Text(
-          "Order "
+          "Cancel Order"
         ),
         leading: IconButton(
           icon: Icon(Icons.close),
@@ -43,7 +42,7 @@ class _OrderState extends State<Order> {
               itemBuilder: (_, index){
                 OrderModel _order = user.orders[index];
 
-                if(user.orders[index].status ==0.toString()){
+                if(user.orders[index].status == "-100"){
                   return Column(
                       children:<Widget>[
                         Card(
@@ -169,10 +168,9 @@ class _OrderState extends State<Order> {
                                   color: Colors.green,
                                   onPressed: (){
                                     orderService.updateOrder(uid: user.orders[index].id,status: user.orders[index].status);
-
                                   },
                                   child: Text(
-                                    "Add To Process",
+                                    "Delivered",
                                     style: TextStyle(
                                       color: Colors.white,
                                     ),

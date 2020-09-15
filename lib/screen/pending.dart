@@ -4,27 +4,24 @@ import 'package:adminpage/services/order.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
-class Order extends StatefulWidget {
+class processing extends StatefulWidget {
   @override
-  _OrderState createState() => _OrderState();
+  _processingState createState() => _processingState();
 }
 
-class _OrderState extends State<Order> {
+class _processingState extends State<processing> {
   @override
   Widget build(BuildContext context) {
 
     final user = Provider.of<AuthProvider>(context);
 
-
     OrderServices orderService =  OrderServices();
 
     return Scaffold(
       appBar: AppBar(
-        elevation: 0.0,
         backgroundColor: Colors.green,
         title: Text(
-          "Order "
+          "Process"
         ),
         leading: IconButton(
           icon: Icon(Icons.close),
@@ -43,7 +40,7 @@ class _OrderState extends State<Order> {
               itemBuilder: (_, index){
                 OrderModel _order = user.orders[index];
 
-                if(user.orders[index].status ==0.toString()){
+                if(user.orders[index].status ==50.toString()){
                   return Column(
                       children:<Widget>[
                         Card(
@@ -169,10 +166,9 @@ class _OrderState extends State<Order> {
                                   color: Colors.green,
                                   onPressed: (){
                                     orderService.updateOrder(uid: user.orders[index].id,status: user.orders[index].status);
-
                                   },
                                   child: Text(
-                                    "Add To Process",
+                                    "Delivered",
                                     style: TextStyle(
                                       color: Colors.white,
                                     ),

@@ -22,10 +22,6 @@ class ProductProvider with ChangeNotifier{
 
   Future search({String productName})async{
        productsSearched = await _productServices.searchProducts(productName: productName);
-       print("number of products:${productsSearched.length}");
-       print("number of products:${productsSearched.length}");
-       print("number of products:${productsSearched.length}");
-       print("number of products:${productsSearched.length}");
        notifyListeners();
   }
 

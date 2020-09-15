@@ -33,6 +33,7 @@ class OrderModel{
   int _total;
 
 
+
 //  getters
   String get id => _id;
   String get userId => _userId;
@@ -67,13 +68,8 @@ class OrderModel{
     _land = snapshot.data[LAND];
     _city = snapshot.data[CITY];
     _phone = snapshot.data[PHONE];
+
   }
-
-
-
-
-
-
 
 
 

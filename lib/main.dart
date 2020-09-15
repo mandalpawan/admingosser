@@ -22,9 +22,9 @@ void main() async{
   ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Food App',
+          title: 'admin ',
           theme: ThemeData(
-            primarySwatch: Colors.red,
+            primarySwatch: Colors.green,
           ),
           home: MyApp())));
 }

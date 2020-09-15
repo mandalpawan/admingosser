@@ -1,31 +1,26 @@
 import 'package:adminpage/model/order.dart';
 import 'package:adminpage/provider/auth.dart';
-import 'package:adminpage/services/order.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 
-class Order extends StatefulWidget {
+class sold extends StatefulWidget {
   @override
-  _OrderState createState() => _OrderState();
+  _soldState createState() => _soldState();
 }
 
-class _OrderState extends State<Order> {
+class _soldState extends State<sold> {
   @override
   Widget build(BuildContext context) {
 
     final user = Provider.of<AuthProvider>(context);
 
 
-    OrderServices orderService =  OrderServices();
-
     return Scaffold(
       appBar: AppBar(
         elevation: 0.0,
         backgroundColor: Colors.green,
-        title: Text(
-          "Order "
-        ),
+        title: Text("Sold product"),
         leading: IconButton(
           icon: Icon(Icons.close),
           onPressed: (){
@@ -43,7 +38,7 @@ class _OrderState extends State<Order> {
               itemBuilder: (_, index){
                 OrderModel _order = user.orders[index];
 
-                if(user.orders[index].status ==0.toString()){
+                if(user.orders[index].status ==100.toString()){
                   return Column(
                       children:<Widget>[
                         Card(
@@ -62,6 +57,7 @@ class _OrderState extends State<Order> {
                                       fontSize: 14.0
                                   ),
                                 ),
+
 
 
                                 ListView.builder(
@@ -163,21 +159,6 @@ class _OrderState extends State<Order> {
                                     'Table No. : 05'
                                 ),
                                 SizedBox(height: 10.0,),
-
-                                RaisedButton(
-                                  padding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 19.0),
-                                  color: Colors.green,
-                                  onPressed: (){
-                                    orderService.updateOrder(uid: user.orders[index].id,status: user.orders[index].status);
-
-                                  },
-                                  child: Text(
-                                    "Add To Process",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
                               ],
                             ),
                           ),
@@ -188,8 +169,22 @@ class _OrderState extends State<Order> {
                   return SizedBox();
                 }
 
-
               }
+          ),
+        ),
+      ),
+      bottomNavigationBar: Container(
+        child: RaisedButton(
+          color: Colors.green,
+          onPressed: (){
+            //TODO file downoad
+          },
+          child: Text(
+            "Download file",
+            style: TextStyle(
+              color: Colors.white,
+
+            ),
           ),
         ),
       ),

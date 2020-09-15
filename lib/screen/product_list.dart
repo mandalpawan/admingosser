@@ -27,7 +27,15 @@ class _AdminFoodDetailScreenState extends State<AdminFoodDetailScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(foodNotifier.foodList.length.toString()),
+          elevation: 0.0,
+          backgroundColor: Colors.green,
+          title: Text("Product Items"),
+          leading: IconButton(
+            icon: Icon(Icons.close),
+            onPressed: (){
+              Navigator.pop(context);
+            },
+          ),
         ),
         body: ListView.separated(
           itemBuilder: (BuildContext context,int index){
