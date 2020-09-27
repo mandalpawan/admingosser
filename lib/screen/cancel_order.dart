@@ -1,4 +1,5 @@
 import 'package:adminpage/model/order.dart';
+import 'package:adminpage/provider/app.dart';
 import 'package:adminpage/provider/auth.dart';
 import 'package:adminpage/services/order.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,8 @@ class _cancelOrderState extends State<cancelOrder> {
 
 
     final user = Provider.of<AuthProvider>(context);
+
+    user.getOrders();
 
     OrderServices orderService =  OrderServices();
 
@@ -161,21 +164,7 @@ class _cancelOrderState extends State<cancelOrder> {
                                 Text(
                                     'Table No. : 05'
                                 ),
-                                SizedBox(height: 10.0,),
 
-                                RaisedButton(
-                                  padding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 19.0),
-                                  color: Colors.green,
-                                  onPressed: (){
-                                    orderService.updateOrder(uid: user.orders[index].id,status: user.orders[index].status);
-                                  },
-                                  child: Text(
-                                    "Delivered",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
                               ],
                             ),
                           ),
@@ -185,8 +174,6 @@ class _cancelOrderState extends State<cancelOrder> {
                 }else{
                   return SizedBox();
                 }
-
-
               }
           ),
         ),

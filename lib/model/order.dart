@@ -29,7 +29,7 @@ class OrderModel{
   String _road;
   String _land;
   String _city;
-  int _createdAt;
+  //int _createdAt;
   int _total;
 
 
@@ -47,7 +47,7 @@ class OrderModel{
   String get city => _city;
   String get status => _status;
   int get total => _total;
-  int get createdAt => _createdAt;
+  //int get createdAt => _createdAt;
 
   // public variable
   List cart;
@@ -58,7 +58,7 @@ class OrderModel{
     _total = snapshot.data[TOTAL];
     _status = snapshot.data[STATUS];
     _userId = snapshot.data[USER_ID];
-    _createdAt = snapshot.data[CREATED_AT];
+   // _createdAt = snapshot.data[CREATED_AT];
     cart = snapshot.data[CART];
     _description = snapshot.data[DESCRIPTION];
     _name = snapshot.data[NAME];

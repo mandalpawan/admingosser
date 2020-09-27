@@ -37,6 +37,7 @@ class _AdminFoodDetailScreenState extends State<AdminFoodDetailScreen> {
             },
           ),
         ),
+
         body: ListView.separated(
           itemBuilder: (BuildContext context,int index){
             return ListTile(
@@ -47,7 +48,7 @@ class _AdminFoodDetailScreenState extends State<AdminFoodDetailScreen> {
                 fit: BoxFit.fitWidth,
               ),
               title: Text(foodNotifier.foodList[index].Name),
-              subtitle: Text("Hello"),
+              subtitle: Text(foodNotifier.foodList[index].category),
               onTap: (){
                 foodNotifier.currentFood = foodNotifier.foodList[index];
 

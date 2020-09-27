@@ -173,21 +173,7 @@ class _soldState extends State<sold> {
           ),
         ),
       ),
-      bottomNavigationBar: Container(
-        child: RaisedButton(
-          color: Colors.green,
-          onPressed: (){
-            //TODO file downoad
-          },
-          child: Text(
-            "Download file",
-            style: TextStyle(
-              color: Colors.white,
 
-            ),
-          ),
-        ),
-      ),
     );
   }
 }

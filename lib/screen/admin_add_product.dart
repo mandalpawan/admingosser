@@ -2,11 +2,10 @@ import 'dart:io';
 
 import 'package:adminpage/model/product_model.dart';
 import 'package:adminpage/provider/product_notifier.dart';
-import 'package:adminpage/screen/load_page.dart';
+import 'package:adminpage/screen/loading_page.dart';
 import 'package:adminpage/services/product_adding.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:loading/loading.dart';
 import 'package:provider/provider.dart';
 
 
@@ -29,12 +28,15 @@ class _AddfooditemAdminState extends State<AddfooditemAdmin> {
   String _imageUrl;
   File _imageFile;
 
-  var _FoodListCatagory = ["vegetables", "fruits","dry fruits","cerealas","pulses","spices","dairy products","bakery products","eggs & chicken","mahila gruhudyog products"];
+  var _FoodListCatagory = ["vegetables", "fruits","dry fruits","cerealas","pulses","spices","dairy products","bakery products","eggs & chicken","mahila gruhudyog products","oil"];
 
   var _FoodListSale = ["Regular", "Not Regular"];
 
+  var _FoodQunantitySale = [" 1/Kg ", " 1/Lit "];
+
   var _currentFoodCatagoryList = "vegetables";
   var _currentFoodSaleList = "Not Regular" ;
+  var _currentFoodQunatityList = " 1/Kg " ;
 
   @override
   void initState(){
@@ -118,6 +120,7 @@ class _AddfooditemAdminState extends State<AddfooditemAdmin> {
     FoodNotifier foodNotifier = Provider.of<FoodNotifier>(context, listen: false);
     foodNotifier.addFood(food);
     Navigator.pop(context);
+    Navigator.pop(context);
   }
 
   Widget _buildNameField(){
@@ -187,6 +190,34 @@ class _AddfooditemAdminState extends State<AddfooditemAdmin> {
         value: _currentFoodCatagoryList,
         onSaved: (String value){
           _currentFood.category =value;
+        },
+      ),
+    );
+
+  }
+
+  Widget _buildQuantityField(){
+    return Container(
+      child: DropdownButtonFormField<String>(
+        items: _FoodQunantitySale.map((String dropDownItem){
+          return DropdownMenuItem<String>(
+            value: dropDownItem,
+            child: Text(dropDownItem),
+          );
+        }).toList(),
+        decoration: InputDecoration(labelText: "Quantity",),
+
+        onChanged: (String value) {
+          setState(() {
+            _currentFoodQunatityList = value;
+          });
+        },
+        validator: (String value){
+
+        },
+        value: _currentFoodQunatityList,
+        onSaved: (String value){
+          _currentFood.quantity = value;
         },
       ),
     );
@@ -263,8 +294,14 @@ class _AddfooditemAdminState extends State<AddfooditemAdmin> {
     }
 
     _formkey.currentState.save();
-
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (BuildContext context){
+        return LoadingPage();
+      }
+    ));
     uploadFoodAndImage(_currentFood, widget.isUpdating , _imageFile,_onFoodUploaded);
+    //print(_currentFood.price + _currentFoodQunatityList);
+   // Navigator.pop(context);
 
   }
 
@@ -318,7 +355,18 @@ class _AddfooditemAdminState extends State<AddfooditemAdmin> {
               _buildCatagoryField(),
               _buildOnSaleField(),
               _buildDiscriptionField(),
-              _buildPriceField(),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildPriceField(),
+                  ),
+                  SizedBox(width: 30.0,),
+                  Expanded(
+                    child: _buildQuantityField(),
+                  ),
+
+                ],
+              ),
               _buildstockField(),
               SizedBox(height: 16.0,),
             ],

@@ -1,10 +1,8 @@
 import 'package:adminpage/model/product_model.dart';
 import 'package:adminpage/provider/product_notifier.dart';
 import 'package:adminpage/screen/admin_add_product.dart';
-import 'package:adminpage/screen/load_page.dart';
 import 'package:adminpage/services/product_adding.dart';
 import 'package:flutter/material.dart';
-import 'package:loading/loading.dart';
 import 'package:provider/provider.dart';
 
 

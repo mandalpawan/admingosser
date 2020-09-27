@@ -4,6 +4,7 @@ import 'package:adminpage/provider/product_notifier.dart';
 import 'package:adminpage/screen/admin_add_product.dart';
 import 'package:adminpage/screen/cancel_order.dart';
 import 'package:adminpage/screen/explore.dart';
+import 'package:adminpage/screen/login.dart';
 import 'package:adminpage/screen/order.dart';
 import 'package:adminpage/screen/pending.dart';
 import 'package:adminpage/screen/product_detail.dart';
@@ -29,8 +30,6 @@ class _AdminState extends State<Admin> {
   MaterialColor notActive = Colors.grey;
   TextEditingController categoryController = TextEditingController();
   TextEditingController brandController = TextEditingController();
-  GlobalKey<FormState> _categoryFormKey = GlobalKey();
-  GlobalKey<FormState> _brandFormKey = GlobalKey();
 
   @override
   void initState() {
@@ -83,12 +82,24 @@ class _AdminState extends State<Admin> {
     final user = Provider.of<AuthProvider>(context);
     FoodNotifier foodNotifier = Provider.of<FoodNotifier>(context);
 
+
     switch (_selectedPage) {
       case Page.dashboard:
         return Column(
           children: <Widget>[
             ListTile(
-              subtitle: FlatButton.icon(
+              subtitle: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Text(
+                  "\u20B9 \t"+user.totalSale.toString(),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 30.0, color: Colors.green
+                  ),
+                ),
+              ),
+              /*
+              FlatButton.icon(
                 onPressed: null,
                 icon: Icon(
                   Icons.attach_money,
@@ -98,7 +109,7 @@ class _AdminState extends State<Admin> {
                 label: Text(user.totalSale.toString(),
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 30.0, color: Colors.green)),
-              ),
+              ),*/
               title: Text(
                 'Revenue',
                 textAlign: TextAlign.center,
@@ -111,7 +122,7 @@ class _AdminState extends State<Admin> {
                     crossAxisCount: 2),
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.all(18.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: Card(
                       child: ListTile(
                           title: FlatButton.icon(
@@ -164,7 +175,7 @@ class _AdminState extends State<Admin> {
                             title: FlatButton.icon(
                                 onPressed: null,
                                 icon: Icon(Icons.track_changes),
-                                label: Text("Producs")),
+                                label: Text("Products")),
                             subtitle: Text(
                               foodNotifier.foodList.length.toString(),
                               textAlign: TextAlign.center,
@@ -174,7 +185,7 @@ class _AdminState extends State<Admin> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(22.0),
+                    padding: const EdgeInsets.all(10.0),
                     child: GestureDetector(
                       onTap: (){
                         Navigator.of(context).push(MaterialPageRoute(
@@ -278,6 +289,30 @@ class _AdminState extends State<Admin> {
               },
             ),
             Divider(),
+            GestureDetector(
+              onTap: () async {
+                user.signOut();
+                Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => loginPage()));
+              },
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 50.0,
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+                child: Center(
+                  child: Text(
+                    "Logout",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0,
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ],
         );
         break;
@@ -286,71 +321,4 @@ class _AdminState extends State<Admin> {
     }
   }
 
-  void _categoryAlert() {
-    var alert = new AlertDialog(
-      content: Form(
-        key: _categoryFormKey,
-        child: TextFormField(
-          controller: categoryController,
-          validator: (value){
-            if(value.isEmpty){
-              return 'category cannot be empty';
-            }
-          },
-          decoration: InputDecoration(
-              hintText: "add category"
-          ),
-        ),
-      ),
-      actions: <Widget>[
-        FlatButton(onPressed: (){
-          if(categoryController.text != null){
-           // _categoryService.createCategory(categoryController.text);
-          }
-          Fluttertoast.showToast(msg: 'category created');
-          Navigator.pop(context);
-        }, child: Text('ADD')),
-        FlatButton(onPressed: (){
-          Navigator.pop(context);
-        }, child: Text('CANCEL')),
-
-      ],
-    );
-
-    showDialog(context: context, builder: (_) => alert);
-  }
-
-  void _brandAlert() {
-    var alert = new AlertDialog(
-      content: Form(
-        key: _brandFormKey,
-        child: TextFormField(
-          controller: brandController,
-          validator: (value){
-            if(value.isEmpty){
-              return 'category cannot be empty';
-            }
-          },
-          decoration: InputDecoration(
-              hintText: "add brand"
-          ),
-        ),
-      ),
-      actions: <Widget>[
-        FlatButton(onPressed: (){
-          if(brandController.text != null){
-           // _brandService.createBrand(brandController.text);
-          }
-          Fluttertoast.showToast(msg: 'brand added');
-          Navigator.pop(context);
-        }, child: Text('ADD')),
-        FlatButton(onPressed: (){
-          Navigator.pop(context);
-        }, child: Text('CANCEL')),
-
-      ],
-    );
-
-    showDialog(context: context, builder: (_) => alert);
-  }
 }

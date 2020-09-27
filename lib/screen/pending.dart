@@ -1,7 +1,14 @@
+
 import 'package:adminpage/model/order.dart';
+import 'package:adminpage/provider/app.dart';
 import 'package:adminpage/provider/auth.dart';
+import 'package:adminpage/screen/load_csv.dart';
+import 'package:adminpage/screen/loading_page.dart';
 import 'package:adminpage/services/order.dart';
+import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
+
 import 'package:provider/provider.dart';
 
 class processing extends StatefulWidget {
@@ -14,8 +21,12 @@ class _processingState extends State<processing> {
   Widget build(BuildContext context) {
 
     final user = Provider.of<AuthProvider>(context);
+    final appload = Provider.of<AppProvider>(context);
 
     OrderServices orderService =  OrderServices();
+
+    user.getOrders();
+
 
     return Scaffold(
       appBar: AppBar(
@@ -30,7 +41,8 @@ class _processingState extends State<processing> {
           },
         ),
       ),
-      body: SingleChildScrollView(
+
+      body : appload.isLoading ? LoadingPage() :SingleChildScrollView(
 
         child: Container(
           child: ListView.builder(
@@ -149,15 +161,30 @@ class _processingState extends State<processing> {
                                 ),
                                 SizedBox(height: 8.0,),
                                 Text(
-                                    'Name : Pawan Mandal'
+                                    user.orders[index].name
                                 ),
                                 SizedBox(height: 5.0,),
                                 Text(
-                                    'Mobile Number : 8603587194'
+                                    user.orders[index].home,
                                 ),
                                 SizedBox(height: 5.0,),
                                 Text(
-                                    'Table No. : 05'
+                                  user.orders[index].road,
+                                ),
+                                Text(
+                                  user.orders[index].land,
+                                ),
+                                Text(
+                                  user.orders[index].city,
+                                ),
+                                Text(
+                                  user.orders[index].pin,
+                                ),
+                                Text(
+                                  "Maharastra",
+                                ),
+                                Text(
+                                  user.orders[index].phone,
                                 ),
                                 SizedBox(height: 10.0,),
 
@@ -165,7 +192,9 @@ class _processingState extends State<processing> {
                                   padding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 19.0),
                                   color: Colors.green,
                                   onPressed: (){
+                                    appload.changeIsLoading();
                                     orderService.updateOrder(uid: user.orders[index].id,status: user.orders[index].status);
+                                    appload.changeIsLoading();
                                   },
                                   child: Text(
                                     "Delivered",

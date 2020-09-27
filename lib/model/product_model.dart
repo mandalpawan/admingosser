@@ -12,6 +12,7 @@ class Food{
   String discription;
   String image;
   String sale;
+  String quantity;
 
   Food();
 
@@ -26,6 +27,7 @@ class Food{
     createdAt = data["createdAt"];
     updatedAt = data["updatedAt"];
     stock = data['stock'];
+    quantity = data['quantity'];
   }
 
   Map<String, dynamic> toMap(){
@@ -40,7 +42,8 @@ class Food{
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'qty' : 1,
-      'stock':stock
+      'stock':stock,
+      'quantity':quantity,
     };
   }
 

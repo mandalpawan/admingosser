@@ -3,6 +3,8 @@ import 'package:adminpage/model/product_model.dart';
 import 'package:adminpage/provider/product_notifier.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:path/path.dart' as path;
 
@@ -24,6 +26,7 @@ getFoods(FoodNotifier foodNotifier) async{
 }
 
 uploadFoodAndImage(Food food, bool isUpdating, File localFile, Function foodUploaded) async {
+
   if (localFile != null) {
     print("uploading image");
 
@@ -79,6 +82,7 @@ _uploadFood(Food food, bool isUpdating, Function foodUploaded, {String imageUrl}
 }
 
 deleteFood(Food food, Function foodDeleted) async {
+
   if (food.image != null) {
     StorageReference storageReference =
     await FirebaseStorage.instance.getReferenceFromUrl(food.image);

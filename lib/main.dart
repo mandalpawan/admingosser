@@ -3,6 +3,8 @@ import 'package:adminpage/provider/auth.dart';
 import 'package:adminpage/provider/product.dart';
 import 'package:adminpage/provider/product_notifier.dart';
 import 'package:adminpage/screen/admin_home.dart';
+import 'package:adminpage/screen/login.dart';
+import 'package:adminpage/screen/splash.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -26,7 +28,7 @@ void main() async{
           theme: ThemeData(
             primarySwatch: Colors.green,
           ),
-          home: MyApp())));
+          home: ScreensController())));
 }
 
 class MyApp extends StatelessWidget {
@@ -36,6 +38,24 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Admin(),
     );
+  }
+}
+
+class ScreensController extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final user = Provider.of<AuthProvider>(context);
+    switch(user.status){
+      case Status.Unintialized:
+        return Splash();
+      case Status.Unauthenticated:
+      case Status.Authenticating:
+        return loginPage();
+      case Status.Authentiated:
+        return  Admin();
+    //return AdminDeshBoard();
+      default: return loginPage();
+    }
   }
 }
 

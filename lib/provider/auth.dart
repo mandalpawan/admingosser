@@ -23,6 +23,7 @@ class AuthProvider with ChangeNotifier {
   UserServices _userServices = UserServices();
   UserModel _userModel;
   OrderServices _orderServices = OrderServices();
+  OrderModel _orderModel;
   int _totalSale = 0;
   int _totalprocessingItem = 0;
   int _totalSoldItem = 0;
@@ -61,6 +62,7 @@ class AuthProvider with ChangeNotifier {
 
   //signIn
   Future<bool> signIn() async {
+
     try {
       _status = Status.Authenticating;
       notifyListeners();
@@ -73,6 +75,7 @@ class AuthProvider with ChangeNotifier {
       print("error:" + e.toString());
       return false;
     }
+
   }
 
   //SignOut
@@ -88,10 +91,7 @@ class AuthProvider with ChangeNotifier {
     try {
       _status = Status.Authenticating;
       notifyListeners();
-      await _auth
-          .createUserWithEmailAndPassword(
-              email: email.text, password: password.text)
-          .then((user) {
+      await _auth.createUserWithEmailAndPassword(email: email.text, password: password.text).then((user) {
         Map<String, dynamic> values = {
           "name": name.text,
           "email": email.text,
@@ -104,6 +104,7 @@ class AuthProvider with ChangeNotifier {
       return onError(e.toString());
     }
   }
+
 
   //get all user
 
@@ -120,9 +121,11 @@ class AuthProvider with ChangeNotifier {
   //get total sold price
   getTotalSale() async {
     for(OrderModel order in orders){
-      _totalSale = _totalSale + order.total;
+      if(order.status == "100"){
+        _totalSale = _totalSale + order.total;
+      }
     }
-        notifyListeners();
+    notifyListeners();
   }
 
 
@@ -171,6 +174,7 @@ class AuthProvider with ChangeNotifier {
     _userModel = await _userServices.getUserById(user.uid);
     notifyListeners();
   }
+
 
   Future<bool> removeFromCart({Map cartItem}) async {
     print("THE PRODUC IS: ${cartItem.toString()}");

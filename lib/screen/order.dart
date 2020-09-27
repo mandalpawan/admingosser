@@ -1,5 +1,7 @@
 import 'package:adminpage/model/order.dart';
+import 'package:adminpage/provider/app.dart';
 import 'package:adminpage/provider/auth.dart';
+import 'package:adminpage/screen/loading_page.dart';
 import 'package:adminpage/services/order.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,9 +17,38 @@ class _OrderState extends State<Order> {
   Widget build(BuildContext context) {
 
     final user = Provider.of<AuthProvider>(context);
+    final appload = Provider.of<AppProvider>(context);
 
+    user.getOrders();
 
     OrderServices orderService =  OrderServices();
+
+    void _showDialog(String orderid,String status) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: new Text("Cancel Ordered"),
+            content: new Text("Are you suru to cancel order?"),
+            actions: <Widget>[
+              FlatButton(
+                child: new Text("Yes"),
+                onPressed: () {
+                  orderService.CancelOrder(uid: orderid,status: status);
+                  Navigator.of(context).pop();
+                },
+              ),
+              FlatButton(
+                child: new Text("No"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -33,7 +64,7 @@ class _OrderState extends State<Order> {
           },
         ),
       ),
-      body: SingleChildScrollView(
+      body: appload.isLoading ? LoadingPage() : SingleChildScrollView(
 
         child: Container(
           child: ListView.builder(
@@ -152,31 +183,69 @@ class _OrderState extends State<Order> {
                                 ),
                                 SizedBox(height: 8.0,),
                                 Text(
-                                    'Name : Pawan Mandal'
+                                    user.orders[index].name
                                 ),
                                 SizedBox(height: 5.0,),
                                 Text(
-                                    'Mobile Number : 8603587194'
+                                  user.orders[index].home,
                                 ),
                                 SizedBox(height: 5.0,),
                                 Text(
-                                    'Table No. : 05'
+                                  user.orders[index].road,
+                                ),
+                                Text(
+                                  user.orders[index].land,
+                                ),
+                                Text(
+                                  user.orders[index].city,
+                                ),
+                                Text(
+                                  user.orders[index].pin,
+                                ),
+                                Text(
+                                  "Maharastra",
+                                ),
+                                Text(
+                                  user.orders[index].phone,
                                 ),
                                 SizedBox(height: 10.0,),
 
-                                RaisedButton(
-                                  padding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 19.0),
-                                  color: Colors.green,
-                                  onPressed: (){
-                                    orderService.updateOrder(uid: user.orders[index].id,status: user.orders[index].status);
-
-                                  },
-                                  child: Text(
-                                    "Add To Process",
-                                    style: TextStyle(
-                                      color: Colors.white,
+                                Row(
+                                  children: [
+                                    RaisedButton(
+                                      padding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 19.0),
+                                      color: Colors.green,
+                                      onPressed: (){
+                                        appload.changeIsLoading();
+                                        orderService.updateOrder(uid: user.orders[index].id,status: user.orders[index].status);
+                                        appload.changeIsLoading();
+                                      },
+                                      child: Text(
+                                        "Add To Process",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
                                     ),
-                                  ),
+
+                                    SizedBox(width: 15.0,),
+                                    RaisedButton(
+                                      padding: EdgeInsets.symmetric(vertical: 10.0,horizontal: 19.0),
+                                      color: Colors.red,
+                                      onPressed: (){
+                                        appload.changeIsLoading();
+                                        //orderService.updateOrder(uid: user.orders[index].id,status: user.orders[index].status);
+                                        _showDialog(user.orders[index].id,user.orders[index].status);
+                                        appload.changeIsLoading();
+                                      },
+                                      child: Text(
+                                        "Cancel Order",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
